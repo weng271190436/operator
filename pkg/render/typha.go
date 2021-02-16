@@ -353,6 +353,23 @@ func (c *typhaComponent) typhaDeployment() *apps.Deployment {
 			},
 		},
 	}
+	if c.installation.KubernetesProvider == operator.ProviderAKS {
+		d.Spec.Template.Spec.Affinity.NodeAffinity.RequiredDuringSchedulingIgnoredDuringExecution = &v1.NodeSelector{
+			NodeSelectorTerms: []v1.NodeSelectorTerm{{
+				MatchExpressions: []v1.NodeSelectorRequirement{
+					{
+						Key:      "type",
+						Operator: v1.NodeSelectorOpNotIn,
+						Values:   []string{"virtual-kubelet"},
+					},
+					{
+						Key:      "kubernetes.azure.com/cluster",
+						Operator: v1.NodeSelectorOpExists,
+					},
+				},
+			}},
+		}
+	}
 	setCriticalPod(&(d.Spec.Template))
 	if c.namespaceMigration {
 		migration.SetTyphaAntiAffinity(&d)

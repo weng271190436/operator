@@ -62,8 +62,11 @@ func createNamespace(name string, openshift bool) *corev1.Namespace {
 	ns := &corev1.Namespace{
 		TypeMeta: metav1.TypeMeta{Kind: "Namespace", APIVersion: "v1"},
 		ObjectMeta: metav1.ObjectMeta{
-			Name:        name,
-			Labels:      map[string]string{"name": name},
+			Name: name,
+			Labels: map[string]string{
+				"name":          name,
+				"control-plane": "true",
+			},
 			Annotations: map[string]string{},
 		},
 	}

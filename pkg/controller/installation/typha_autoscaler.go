@@ -43,8 +43,8 @@ const (
 // The number of Typha replicas depends on the number of nodes:
 // Nodes       Replicas
 //     1              1
-//     2              2
-//     3              3
+//     2              1
+//     3              2
 //   250              4
 //   500              5
 //  1000              6
@@ -88,12 +88,10 @@ func newTyphaAutoscaler(client client.Client, statusManager status.StatusManager
 // getExpectedReplicas gets the number of replicas expected for a given node number.
 func (t *typhaAutoscaler) getExpectedReplicas(nodes int) int {
 	switch {
-	case nodes <= 1:
-		return 1
 	case nodes <= 2:
-		return 2
+		return 1
 	case nodes <= 3:
-		return 3
+		return 2
 	case nodes <= 250:
 		return 4
 	case nodes <= 500:
